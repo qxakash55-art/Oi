@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#ff2e63" />
+  <title>My Sweet Boro Apu ❤️</title>
+  <style>
+    :root {
+      --pink-50: #fff5f8;
+      --pink-100: #ffe4ee;
+      --pink-200: #ffc2d6;
+      --pink-400: #ff6b96;
+      --pink-500: #ff3b74;
+      --red-500: #e11d48;
+      --red-600: #be123c;
+      --white: #ffffff;
+      --text-dark: #4a0e24;
+      --text-soft: #7f2948;
+      --glass: rgba(255, 255, 255, 0.72);
+      --glass-strong: rgba(255, 255, 255, 0.88);
+      --glass-border: rgba(255, 255, 255, 0.9);
+      --shadow-pink: 0 22px 50px rgba(225, 29, 72, 0.18);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      font-family: 'Noto Sans Bengali', 'Hind Siliguri', 'Kalpurush', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background:
+        radial-gradient(circle at 15% 15%, #ffd6e5 0%, transparent 45%),
+        radial-gradient(circle at 85% 80%, #ffb8d0 0%, transparent 45%),
+        linear-gradient(155deg, #fff8fa 0%, #ffe6ef 48%, #ffd1e1 100%);
+      color: var(--text-dark);
+      overflow: hidden;
+    }
+
+    /* Fullscreen Falling Rose & Floating Hearts Canvas */
+    #romanticCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Mobile App Viewport Wrapper */
+    .app-viewport {
+      position: relative;
+      z-index: 2;
+      height: 100dvh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+    }
+
+    /* Premium Mobile App Shell */
+    .mobile-app-shell {
+      width: 100%;
+      max-width: 420px;
+      height: 100%;
+      max-height: 760px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 240, 246, 0.76) 100%);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1.5px solid var(--glass-border);
+      border-radius: 34px;
+      box-shadow:
+        0 28px 70px rgba(190, 18, 60, 0.22),
+        0 4px 16px rgba(255, 59, 116, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Top Mobile App Bar */
+    .app-header {
+      padding: 16px 20px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.65);
+      border-bottom: 1px solid rgba(255, 107, 150, 0.18);
+      flex-shrink: 0;
+    }
+
+    .app-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .app-logo-dot {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--pink-500), var(--red-500));
+      color: var(--white);
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+      box-shadow: 0 6px 14px rgba(225, 29, 72, 0.28);
+    }
+
+    .app-brand-title {
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: var(--red-600);
+      letter-spacing: -0.2px;
+    }
+
+    .app-brand-sub {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--pink-500);
+      display: block;
+    }
+
+    .sound-btn {
+      border: 1px solid rgba(255, 59, 116, 0.25);
+      background: var(--white);
+      color: var(--red-500);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.1);
+      transition: transform 0.2s var(--ease);
+    }
+
+    .sound-btn:active { transform: scale(0.92); }
+
+    /* Step Progress Bar */
+    .progress-strip {
+      height: 4px;
+      width: 100%;
+      background: rgba(255, 107, 150, 0.16);
+      flex-shrink: 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 20%;
+      background: linear-gradient(90deg, var(--pink-400), var(--red-500));
+      border-radius: 0 99px 99px 0;
+      transition: width 0.5s var(--ease);
+    }
+
+    /* Page Container */
+    .pages-stage {
+      flex: 1;
+      position: relative;
+      overflow-y: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px 20px;
+    }
+
+    .page {
+      display: none;
+      width: 100%;
+      text-align: center;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page.active {
+      display: flex;
+      animation: pageSlideIn 0.55s var(--ease);
+    }
+
+    @keyframes pageSlideIn {
+      from { opacity: 0; transform: translateY(22px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Animated SVG Heart */
+    .heart-stage {
+      position: relative;
+      width: 132px;
+      height: 132px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 18px;
+    }
+
+    .heart-aura {
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 59, 116, 0.34) 0%, rgba(255, 59, 116, 0) 70%);
+      animation: auraPulse 1.6s infinite ease-in-out;
+    }
+
+    .heart-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px dashed rgba(225, 29, 72, 0.25);
+      animation: spinSlow 14s linear infinite;
+    }
+
+    .big-heart-svg {
+      width: 88px;
+      height: 88px;
+      position: relative;
+      z-index: 2;
+      filter: drop-shadow(0 12px 22px rgba(225, 29, 72, 0.42));
+      animation: heartBeat 1.45s infinite ease-in-out;
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      18% { transform: scale(1.16); }
+      36% { transform: scale(0.98); }
+      54% { transform: scale(1.1); }
+    }
+
+    @keyframes auraPulse {
+      0%, 100% { transform: scale(0.92); opacity: 0.7; }
+      50% { transform: scale(1.18); opacity: 1; }
+    }
+
+    @keyframes spinSlow {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Glass Content Card */
+    .glass-card {
+      width: 100%;
+      background: var(--glass-strong);
+      border: 1.5px solid var(--white);
+      border-radius: 24px;
+      padding: 24px 20px;
+      box-shadow: var(--shadow-pink);
+      margin-bottom: 22px;
+    }
+
+    .pill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 99px;
+      background: var(--pink-100);
+      color: var(--red-600);
+      border: 1px solid rgba(225, 29, 72, 0.18);
+      font-size: 0.74rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .headline {
+      font-size: 1.32rem;
+      font-weight: 800;
+      line-height: 1.55;
+      color: var(--text-dark);
+    }
+
+    .body-copy {
+      font-size: 0.98rem;
+      font-weight: 500;
+      line-height: 1.75;
+      color: var(--text-soft);
+      margin-top: 10px;
+    }
+
+    /* Message Dots & Card Animation */
+    .msg-dots {
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      margin-bottom: 16px;
+    }
+
+    .msg-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 99px;
+      background: var(--pink-200);
+      transition: all 0.3s var(--ease);
+    }
+
+    .msg-dot.active {
+      width: 24px;
+      background: linear-gradient(90deg, var(--pink-500), var(--red-500));
+    }
+
+    .msg-fade {
+      animation: msgSwap 0.4s var(--ease);
+    }
+
+    @keyframes msgSwap {
+      from { opacity: 0; transform: translateX(14px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Special Proposal Typography */
+    .love-banner {
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #fff0f5, #ffe0eb);
+      border: 1.5px solid rgba(225, 29, 72, 0.25);
+      font-size: 1.65rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      color: var(--red-500);
+      text-shadow: 0 4px 14px rgba(225, 29, 72, 0.18);
+      animation: heartBeat 2s infinite ease-in-out;
+    }
+
+    /* Romantic Buttons */
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: 18px;
+      padding: 15px 20px;
+      font-family: inherit;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.25s var(--ease);
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-romantic {
+      background: linear-gradient(135deg, var(--pink-500) 0%, var(--red-500) 100%);
+      color: var(--white);
+      box-shadow: 0 12px 26px rgba(225, 29, 72, 0.34);
+    }
+
+    .btn-romantic:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px rgba(225, 29, 72, 0.42);
+    }
+
+    .btn-soft {
+      background: var(--white);
+      color: var(--red-600);
+      border: 1.5px solid rgba(225, 29, 72, 0.25);
+      box-shadow: 0 8px 20px rgba(225, 29, 72, 0.1);
+    }
+
+    .btn-soft:hover {
+      background: var(--pink-50);
+      border-color: var(--pink-500);
+    }
+
+    .btn-stack {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .answer-result {
+      display: none;
+      width: 100%;
+      margin-top: 4px;
+      animation: pageSlideIn 0.45s var(--ease);
+    }
+
+    .answer-result.show { display: block; }
+
+    .made-with-love {
+      margin-top: 8px;
+      padding: 8px 18px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(225, 29, 72, 0.2);
+      color: var(--red-600);
+      font-size: 0.86rem;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      display: inline-block;
+    }
+
+    /* Bottom App Footer Indicator */
+    .app-footer-bar {
+      padding: 10px 18px 14px;
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--pink-500);
+      background: rgba(255, 255, 255, 0.45);
+      border-top: 1px solid rgba(255, 107, 150, 0.12);
+      flex-shrink: 0;
+    }
+
+    /* Small Mobile Optimization */
+    @media (max-width: 480px) {
+      .app-viewport { padding: 0; }
+      .mobile-app-shell {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 0;
+        border: none;
+      }
+      .headline { font-size: 1.2rem; }
+      .body-copy { font-size: 0.94rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Falling Roses & Floating Hearts Canvas -->
+  <canvas id="romanticCanvas"></canvas>
+
+  <div class="app-viewport">
+    <div class="mobile-app-shell">
+
+      <!-- App Header -->
+      <header class="app-header">
+        <div class="app-brand">
+          <div class="app-logo-dot">❤️</div>
+          <div>
+            <div class="app-brand-title">My Sweet Boro Apu ❤️</div>
+            <span class="app-brand-sub" id="pageIndicatorText">Welcome</span>
+          </div>
+        </div>
+        <button id="soundToggleBtn" class="sound-btn" title="Sound On/Off" aria-label="Toggle Sound">🔊</button>
+      </header>
+
+      <!-- Progress Bar -->
+      <div class="progress-strip">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+
+      <!-- Pages Stage -->
+      <main class="pages-stage">
+
+        <!-- ১. WELCOME PAGE -->
+        <section id="page1" class="page active">
+          <div class="heart-stage">
+            <div class="heart-aura"></div>
+            <div class="heart-ring"></div>
+            <svg class="big-heart-svg" viewBox="0 0 100 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="heartGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#ff6b96" />
+                  <stop offset="55%" stop-color="#ff2e63" />
+                  <stop offset="100%" stop-color="#be123c" />
+                </linearGradient>
+              </defs>
+              <path d="M50 85C50 85 8 58 8 28C8 14.5 18.5 5 31 5C40 5 46.8 10.2 50 16.5C53.2 10.2 60 5 69 5C81.5 5 92 14.5 92 28C92 58 50 85 50 85Z" fill="url(#heartGrad1)" stroke="#ffffff" stroke-width="2.5"/>
+              <path d="M24 22C24 16 29 12 35 12" stroke="rgba(255,255,255,0.65)" stroke-width="3.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <div class="glass-card">
+            <div class="pill-tag">🌹 স্পেশাল সারপ্রাইজ</div>
+            <h1 class="headline">তোমার জন্য ছোট্ট একটা সারপ্রাইজ আছে, বড় আপু! 🥰</h1>
+          </div>
+
+          <button id="openHeartBtn" class="btn btn-romantic">Open My Heart ❤️</button>
+        </section>
+
+        <!-- ২. LOVE MESSAGE PAGE -->
+        <section id="page2" class="page">
+          <div class="glass-card" style="padding: 28px 22px;">
+            <div class="pill-tag" id="msgCounterTag">মেসেজ ১ / ৫</div>
+            <div class="msg-dots" id="msgDots">
+              <span class="msg-dot active"></span>
+              <span class="msg-dot"></span>
+              <span class="msg-dot"></span>
+              <span class="msg-dot"></span>
+              <span class="msg-dot"></span>
+            </div>
+            <div style="font-size: 2.3rem; margin-bottom: 12px;">💌</div>
+            <h2 id="loveMessageText" class="headline msg-fade"></h2>
+          </div>
+
+          <button id="nextMessageBtn" class="btn btn-romantic">Next ❤️ ➜</button>
+        </section>
+
+        <!-- ৩. SPECIAL PROPOSAL PAGE -->
+        <section id="page3" class="page">
+          <div class="heart-stage" style="width:116px; height:116px; margin-bottom:14px;">
+            <div class="heart-aura"></div>
+            <div class="heart-ring"></div>
+            <svg class="big-heart-svg" style="width:76px; height:76px;" viewBox="0 0 100 90" fill="none">
+              <defs>
+                <linearGradient id="heartGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#ff6b96" />
+                  <stop offset="50%" stop-color="#ff2e63" />
+                  <stop offset="100%" stop-color="#be123c" />
+                </linearGradient>
+              </defs>
+              <path d="M50 85C50 85 8 58 8 28C8 14.5 18.5 5 31 5C40 5 46.8 10.2 50 16.5C53.2 10.2 60 5 69 5C81.5 5 92 14.5 92 28C92 58 50 85 50 85Z" fill="url(#heartGrad2)" stroke="#ffffff" stroke-width="2.5"/>
+              <path d="M24 22C24 16 29 12 35 12" stroke="rgba(255,255,255,0.65)" stroke-width="3.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <div class="glass-card" style="padding: 22px 18px; margin-bottom: 18px;">
+            <h2 class="headline" style="font-size: 1.18rem; color: var(--red-600);">
+              বড় আপু, একটা কথা বলব? রাগ করবে না তো? 🥺
+            </h2>
+            <p class="body-copy">
+              তোমাকে আমার ভীষণ ভালো লাগে। তুমি যদি স্বাচ্ছন্দ্য বোধ করো, তাহলে তোমাকে আমার মনের একটা কথা বলতে চাই...
+            </p>
+            <div class="love-banner">I LOVE YOU ❤️</div>
+          </div>
+
+          <button id="goToAnswerBtn" class="btn btn-romantic">তোমার উত্তর জানাও 💌</button>
+        </section>
+
+        <!-- ৪. ANSWER PAGE -->
+        <section id="page4" class="page">
+          <div id="answerChoicesWrap" style="width:100%;">
+            <div class="glass-card">
+              <div class="pill-tag">💖 তোমার মতামত</div>
+              <h2 class="headline">তোমার অনুভূতি কী বলবে?</h2>
+              <p class="body-copy" style="font-size:0.9rem;">নিচের যেকোনো একটি অপশন বেছে নাও...</p>
+            </div>
+
+            <div class="btn-stack">
+              <button id="ansYesBtn" class="btn btn-romantic">হ্যাঁ, তোমার অনুভূতিকে সম্মান করি ❤️</button>
+              <button id="ansTimeBtn" class="btn btn-soft">আমাকে একটু সময় দাও 🥺</button>
+            </div>
+          </div>
+
+          <div id="answerResponseWrap" class="answer-result">
+            <div class="glass-card" style="padding: 28px 20px;">
+              <div id="ansEmoji" style="font-size: 3rem; margin-bottom: 12px;">❤️</div>
+              <h2 id="ansResponseText" class="headline"></h2>
+            </div>
+            <button id="goToFinalBtn" class="btn btn-romantic">Next ❤️ ➜</button>
+          </div>
+        </section>
+
+        <!-- ৫. FINAL PAGE -->
+        <section id="page5" class="page">
+          <div class="heart-stage">
+            <div class="heart-aura"></div>
+            <div class="heart-ring"></div>
+            <svg class="big-heart-svg" viewBox="0 0 100 90" fill="none">
+              <defs>
+                <linearGradient id="heartGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#ff6b96" />
+                  <stop offset="50%" stop-color="#ff2e63" />
+                  <stop offset="100%" stop-color="#be123c" />
+                </linearGradient>
+              </defs>
+              <path d="M50 85C50 85 8 58 8 28C8 14.5 18.5 5 31 5C40 5 46.8 10.2 50 16.5C53.2 10.2 60 5 69 5C81.5 5 92 14.5 92 28C92 58 50 85 50 85Z" fill="url(#heartGrad3)" stroke="#ffffff" stroke-width="2.5"/>
+              <path d="M24 22C24 16 29 12 35 12" stroke="rgba(255,255,255,0.65)" stroke-width="3.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <div class="glass-card">
+            <h2 class="headline">আমার ছোট্ট অনুভূতির গল্পটা পড়ার জন্য ধন্যবাদ। ❤️</h2>
+            <div style="margin-top: 14px;">
+              <span class="made-with-love">Made With Love ❤️</span>
+            </div>
+          </div>
+
+          <button id="replayBtn" class="btn btn-soft">আবার শুরু থেকে দেখো ↺</button>
+        </section>
+
+      </main>
+
+      <!-- Bottom App Bar -->
+      <footer class="app-footer-bar">
+        My Sweet Boro Apu ❤️ &bull; Special Story
+      </footer>
+
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // ১. মেসেজ এবং পেজ কন্ট্রোলার
+    // =========================================================================
+    const loveMessages = [
+      "জানো বড় আপু, তোমাকে কিছু কথা বলার ছিল।",
+      "তোমার সাথে কথা বললে মনটা অদ্ভুত রকম ভালো হয়ে যায়।",
+      "তোমার হাসিটা আমার কাছে অনেক স্পেশাল।",
+      "তোমাকে কেন এত ভালো লাগে, সেটা হয়তো ভাষায় বোঝাতে পারব না।",
+      "তোমার প্রতি আমার অনুভূতিটা সত্যিই অনেক সুন্দর। ❤️"
+    ];
+
+    const pageLabels = {
+      1: "Welcome ❤️",
+      2: "Sweet Messages 💌",
+      3: "Special Proposal 🌹",
+      4: "Your Answer 💖",
+      5: "Thank You ❤️"
+    };
+
+    const bengaliDigits = ["০", "১", "২", "৩", "৪", "৫"];
+    let currentMsgIndex = 0;
+
+    function showPage(pageNum) {
+      document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
+      document.getElementById(`page${pageNum}`).classList.add("active");
+      document.getElementById("progressFill").style.width = `${pageNum * 20}%`;
+      document.getElementById("pageIndicatorText").textContent = pageLabels[pageNum] || "";
+    }
+
+    function renderLoveMessage() {
+      const msgEl = document.getElementById("loveMessageText");
+      msgEl.classList.remove("msg-fade");
+      void msgEl.offsetWidth; // trigger reflow for smooth animation
+      msgEl.textContent = loveMessages[currentMsgIndex];
+      msgEl.classList.add("msg-fade");
+
+      document.getElementById("msgCounterTag").textContent = `মেসেজ ${bengaliDigits[currentMsgIndex + 1]} / ৫`;
+      document.querySelectorAll("#msgDots .msg-dot").forEach((dot, idx) => {
+        dot.classList.toggle("active", idx === currentMsgIndex);
+      });
+    }
+
+    // =========================================================================
+    // ২. অফলাইন সফট রোমান্টিক সাউন্ড (Web Audio API)
+    // =========================================================================
+    let soundEnabled = true;
+    let audioCtx = null;
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+
+    function playSoftChime(freq = 523.25, delay = 0, duration = 0.4) {
+      if (!soundEnabled || !AudioContextClass) return;
+      try {
+        if (!audioCtx) audioCtx = new AudioContextClass();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+        gain.gain.setValueAtTime(0.001, audioCtx.currentTime + delay);
+        gain.gain.exponentialRampToValueAtTime(0.075, audioCtx.currentTime + delay + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + delay + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(audioCtx.currentTime + delay);
+        osc.stop(audioCtx.currentTime + delay + duration);
+      } catch (_) {}
+    }
+
+    function playCelebrationMelody() {
+      [523.25, 659.25, 783.99, 1046.5].forEach((note, i) => {
+        playSoftChime(note, i * 0.1, 0.65);
+      });
+    }
+
+    document.getElementById("soundToggleBtn").addEventListener("click", (e) => {
+      soundEnabled = !soundEnabled;
+      e.currentTarget.textContent = soundEnabled ? "🔊" : "🔇";
+    });
+
+    // =========================================================================
+    // ৩. সব বাটনের ইভেন্ট লজিক
+    // =========================================================================
+    // Page 1 -> Page 2
+    document.getElementById("openHeartBtn").addEventListener("click", () => {
+      playSoftChime(587.33, 0, 0.35);
+      playSoftChime(783.99, 0.1, 0.45);
+      currentMsgIndex = 0;
+      renderLoveMessage();
+      showPage(2);
+      burstHearts(window.innerWidth / 2, window.innerHeight / 2, 18);
+    });
+
+    // Page 2 Next Button -> Next Message / Page 3
+    document.getElementById("nextMessageBtn").addEventListener("click", () => {
+      playSoftChime(659.25, 0, 0.3);
+      if (currentMsgIndex < loveMessages.length - 1) {
+        currentMsgIndex++;
+        renderLoveMessage();
+      } else {
+        playCelebrationMelody();
+        showPage(3);
+      }
+    });
+
+    // Page 3 -> Page 4
+    document.getElementById("goToAnswerBtn").addEventListener("click", () => {
+      playSoftChime(698.46, 0, 0.35);
+      document.getElementById("answerChoicesWrap").classList.remove("hidden");
+      document.getElementById("answerResponseWrap").classList.remove("show");
+      showPage(4);
+    });
+
+    // Page 4 Button 1
+    document.getElementById("ansYesBtn").addEventListener("click", () => {
+      playCelebrationMelody();
+      document.getElementById("answerChoicesWrap").classList.add("hidden");
+      document.getElementById("ansEmoji").textContent = "❤️🥰";
+      document.getElementById("ansResponseText").textContent =
+        "তোমার উত্তরটা আমার কাছে অনেক স্পেশাল। সবসময় হাসিখুশি থেকো। ❤️";
+      document.getElementById("answerResponseWrap").classList.add("show");
+      burstHearts(window.innerWidth * 0.5, window.innerHeight * 0.42, 34);
+    });
+
+    // Page 4 Button 2
+    document.getElementById("ansTimeBtn").addEventListener("click", () => {
+      playSoftChime(523.25, 0, 0.4);
+      playSoftChime(659.25, 0.14, 0.5);
+      document.getElementById("answerChoicesWrap").classList.add("hidden");
+      document.getElementById("ansEmoji").textContent = "🌸🥺";
+      document.getElementById("ansResponseText").textContent =
+        "কোনো সমস্যা নেই। তোমার সময় নাও। তোমার সিদ্ধান্তকে আমি সম্মান করি। 🌸";
+      document.getElementById("answerResponseWrap").classList.add("show");
+      burstHearts(window.innerWidth * 0.5, window.innerHeight * 0.45, 20);
+    });
+
+    // Page 4 -> Page 5
+    document.getElementById("goToFinalBtn").addEventListener("click", () => {
+      playCelebrationMelody();
+      showPage(5);
+      burstHearts(window.innerWidth * 0.5, window.innerHeight * 0.35, 30);
+    });
+
+    // Replay from Page 5
+    document.getElementById("replayBtn").addEventListener("click", () => {
+      playSoftChime(587.33, 0, 0.3);
+      currentMsgIndex = 0;
+      showPage(1);
+    });
+
+    // =========================================================================
+    // ৪. FALLING ROSE PETALS & FLOATING HEARTS CANVAS ANIMATION (100% OFFLINE)
+    // =========================================================================
+    const canvas = document.getElementById("romanticCanvas");
+    const ctx = canvas.getContext("2d");
+    let W = 0, H = 0;
+
+    function resizeCanvas() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    const fallingRoses = [];
+    const floatingHearts = [];
+    const bursts = [];
+
+    // Initialize Falling Rose Petals & Roses
+    for (let i = 0; i < 24; i++) {
+      fallingRoses.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        size: Math.random() * 8 + 7,
+        vy: Math.random() * 1.1 + 0.65,
+        vx: (Math.random() - 0.5) * 0.7,
+        rot: Math.random() * Math.PI * 2,
+        vRot: (Math.random() - 0.5) * 0.03,
+        swayPhase: Math.random() * Math.PI * 2,
+        color: ["#ff2e63", "#ff5c8a", "#e11d48", "#ff85a9"][i % 4],
+        alpha: Math.random() * 0.45 + 0.45
+      });
+    }
+
+    // Initialize Floating Hearts
+    for (let i = 0; i < 18; i++) {
+      floatingHearts.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        size: Math.random() * 10 + 8,
+        vy: -(Math.random() * 0.75 + 0.35),
+        vx: (Math.random() - 0.5) * 0.35,
+        alpha: Math.random() * 0.38 + 0.2,
+        color: i % 2 === 0 ? "#ff3b74" : "#e11d48"
+      });
+    }
+
+    function drawVectorHeart(x, y, size, color, alpha, rotation = 0) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rotation);
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      const s = size * 0.5;
+      ctx.moveTo(0, s * 0.65);
+      ctx.bezierCurveTo(s * 1.3, -s * 0.4, s * 0.7, -s * 1.4, 0, -s * 0.5);
+      ctx.bezierCurveTo(-s * 0.7, -s * 1.4, -s * 1.3, -s * 0.4, 0, s * 0.65);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawRosePetal(p) {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = p.alpha;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.moveTo(0, -p.size * 0.6);
+      ctx.bezierCurveTo(p.size * 0.85, -p.size * 0.6, p.size * 0.9, p.size * 0.55, 0, p.size * 0.75);
+      ctx.bezierCurveTo(-p.size * 0.9, p.size * 0.55, -p.size * 0.85, -p.size * 0.6, 0, -p.size * 0.6);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function burstHearts(cx, cy, count = 24) {
+      const palette = ["#ff2e63", "#ff6b96", "#e11d48", "#ffffff", "#ff9ebb"];
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count + Math.random() * 0.25;
+        const speed = Math.random() * 4.2 + 1.5;
+        bursts.push({
+          x: cx,
+          y: cy,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 1.2,
+          size: Math.random() * 10 + 8,
+          life: 1,
+          rot: Math.random() * 0.5 - 0.25,
+          color: palette[i % palette.length]
+        });
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, W, H);
+
+      // Update Falling Rose Petals
+      for (const p of fallingRoses) {
+        p.swayPhase += 0.025;
+        p.x += p.vx + Math.sin(p.swayPhase) * 0.45;
+        p.y += p.vy;
+        p.rot += p.vRot;
+        if (p.y > H + 20) {
+          p.y = -20;
+          p.x = Math.random() * W;
+        }
+        drawRosePetal(p);
+      }
+
+      // Update Floating Hearts
+      for (const h of floatingHearts) {
+        h.x += h.vx;
+        h.y += h.vy;
+        if (h.y < -25) {
+          h.y = H + 25;
+          h.x = Math.random() * W;
+        }
+        drawVectorHeart(h.x, h.y, h.size, h.color, h.alpha);
+      }
+
+      // Update Heart Bursts
+      for (let i = bursts.length - 1; i >= 0; i--) {
+        const b = bursts[i];
+        b.x += b.vx;
+        b.y += b.vy;
+        b.vy += 0.07;
+        b.life -= 0.016;
+        if (b.life <= 0) {
+          bursts.splice(i, 1);
+          continue;
+        }
+        drawVectorHeart(b.x, b.y, b.size, b.color, b.life, b.rot);
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
